@@ -28,15 +28,15 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - images/crate.png
-   - images/explosion-0.png
-   - images/explosion-1.png
-   - images/explosion-2.png
-   - images/explosion-3.png
-   - images/explosion-4.png
-   - images/explosion-5.png
-   - images/explosion-6.png
-   - audio/explosion.mp3
+   - assets/images/crate.png
+   - assets/images/explosion-0.png
+   - assets/images/explosion-1.png
+   - assets/images/explosion-2.png
+   - assets/images/explosion-3.png
+   - assets/images/explosion-4.png
+   - assets/images/explosion-5.png
+   - assets/images/explosion-6.png
+   - assets/audio/explosion.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

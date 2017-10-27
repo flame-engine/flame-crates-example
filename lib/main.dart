@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flame/game.dart';
+import 'package:flame/component.dart';
 import 'package:flame/flame.dart';
 
 main() async {
@@ -11,17 +12,26 @@ main() async {
   new MyGame(dimensions).start();
 }
 
+class Crate extends SpriteComponent {
+  Crate() : super.square(128.0, 'crate.png') {
+    this.angle = 0.0;
+  }
+}
+
 class MyGame extends Game {
 
   Size dimensions;
+  Crate crate;
 
-  MyGame(this.dimensions);
+  MyGame(this.dimensions) {
+    this.crate = new Crate();
+    this.crate.x = dimensions.width / 2;
+    this.crate.y = 200.0;
+  }
 
   @override
   void render(Canvas canvas) {
-    var rect = new Rect.fromLTWH(100.0, 100.0, dimensions.width - 200.0, dimensions.height - 200.0);
-    var paint = new Paint()..color = new Color(0xFFFF0000);
-    canvas.drawRect(rect, paint);
+    crate.render(canvas);
   }
 
   @override
