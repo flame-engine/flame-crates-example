@@ -118,6 +118,13 @@ class MyGame extends Game {
       canvas.restore();
       canvas.save();
     });
+
+    String text = points.toString();
+    ParagraphBuilder paragraph = new ParagraphBuilder(new ParagraphStyle());
+    paragraph.pushStyle(new TextStyle(color: new Color(0xFFFFFFFF), fontSize: 48.0));
+    paragraph.addText(text);
+    var p = paragraph.build()..layout(new ParagraphConstraints(width: 180.0));
+    canvas.drawParagraph(p, new Offset(this.dimensions.width - p.width - 10, this.dimensions.height - p.height - 10));
   }
 
   @override
