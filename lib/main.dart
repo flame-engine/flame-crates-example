@@ -18,6 +18,8 @@ class Crate extends SpriteComponent {
   }
 }
 
+const SPEED = 100;
+
 class MyGame extends Game {
 
   Size dimensions;
@@ -36,6 +38,6 @@ class MyGame extends Game {
 
   @override
   void update(double t) {
-    // TODO: implement update
+    crate.y += t * SPEED;
   }
 }
