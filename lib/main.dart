@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/material.dart' show Colors;
+
 import 'package:flame/game.dart';
 import 'package:flame/component.dart';
 import 'package:flame/flame.dart';
@@ -120,10 +122,7 @@ class MyGame extends Game {
     });
 
     String text = points.toString();
-    ParagraphBuilder paragraph = new ParagraphBuilder(new ParagraphStyle());
-    paragraph.pushStyle(new TextStyle(color: new Color(0xFFFFFFFF), fontSize: 48.0, fontFamily: 'Halo'));
-    paragraph.addText(text);
-    var p = paragraph.build()..layout(new ParagraphConstraints(width: 180.0));
+    Paragraph p = Flame.util.text(text, color: Colors.white, fontSize: 48.0, fontFamily: 'Halo');
     canvas.drawParagraph(p, new Offset(this.dimensions.width - p.width - 10, this.dimensions.height - p.height - 10));
   }
 
