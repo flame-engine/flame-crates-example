@@ -8,6 +8,8 @@ import 'package:flame/flame.dart';
 const SPEED = 250.0;
 const CRATE_SIZE = 128.0;
 
+var points = 0;
+
 main() async {
   Flame.util.enableEvents();
   Flame.audio.disableLog();
@@ -30,6 +32,10 @@ class Crate extends SpriteComponent {
   @override
   void update(double t) {
     y += t * SPEED;
+  }
+
+  bool destroy() {
+    return y <= -CRATE_SIZE;
   }
 }
 
@@ -116,6 +122,13 @@ class MyGame extends Game {
       this.newCrate();
     }
     crates.forEach((crate) => crate.update(t));
+    crates.removeWhere((crate) {
+      bool destroy = crate.destroy();
+      if (destroy) {
+        points -= 20;
+      }
+      return destroy;
+    });
     explosions.forEach((exp) => exp.update(t));
     explosions.removeWhere((exp) => exp.destroy());
   }
@@ -128,6 +141,8 @@ class MyGame extends Game {
       var remove = (dx < diff && dy < diff);
       if (remove) {
         explosions.add(new Explosion(crate));
+        Flame.audio.play('explosion.mp3');
+        points += 10;
       }
       return remove;
     });
