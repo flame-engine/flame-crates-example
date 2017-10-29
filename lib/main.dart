@@ -17,6 +17,9 @@ main() async {
   Explosion.fetch();
 
   var dimensions = await Flame.util.initialDimensions();
+
+  Flame.audio.loop('music.ogg');
+
   var game = new MyGame(dimensions)..start();
   window.onPointerDataPacket = (packet) {
     var pointer = packet.data.first;
@@ -25,6 +28,8 @@ main() async {
 }
 
 class Crate extends SpriteComponent {
+  double maxY;
+
   Crate() : super.square(CRATE_SIZE, 'crate.png') {
     this.angle = 0.0;
   }
@@ -35,7 +40,7 @@ class Crate extends SpriteComponent {
   }
 
   bool destroy() {
-    return y <= -CRATE_SIZE;
+    return y >= maxY + CRATE_SIZE / 2;
   }
 }
 
@@ -92,10 +97,11 @@ class MyGame extends Game {
     crates.add(crate(dimensions.width / 2));
   }
 
-  static Crate crate(double x) {
+  Crate crate(double x) {
     Crate crate = new Crate();
     crate.x = x;
     crate.y = 200.0;
+    crate.maxY = this.dimensions.height;
     return crate;
   }
 
@@ -126,6 +132,7 @@ class MyGame extends Game {
       bool destroy = crate.destroy();
       if (destroy) {
         points -= 20;
+        Flame.audio.play('miss.mp3');
       }
       return destroy;
     });

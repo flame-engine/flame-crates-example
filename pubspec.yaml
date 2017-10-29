@@ -37,6 +37,8 @@ flutter:
    - assets/images/explosion-5.png
    - assets/images/explosion-6.png
    - assets/audio/explosion.mp3
+   - assets/audio/miss.mp3
+   - assets/audio/music.ogg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
