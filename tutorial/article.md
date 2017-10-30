@@ -14,6 +14,8 @@ As for now, sprite sheets are not supported, so, first, we need to convert all t
 
 Also worth mentioning, everything described here is committed, as a fully-functional complete version, on [GitHub](https://github.com/luanpotter/flame-example). You can always take a look when in doubt. Also, the example was created following this exact steps, and taking frequent commits as snapshots. Throughout the tutorial, I will link the specific commits that advance the repository to the stage in question. This will allow you to make checkpoints and browse the old code to see anything that wasn't clear.
 
+One last thing; you can check the full documentation [here](https://github.com/luanpotter/flame/blob/master/README.md). If you have any questions, suggestions, bugs, feel free to open an issue or contact me.
+
 Apart from that, you will also need Flutter and Dart installed. If it suits you, you can also have IntelliJ IDEA, which is a very good place to write your code. In order to install this stuff, you can check out a plethora of tutorials out there, like [this one](https://flutter.io/setup/).
 
 So, for now, I'll assume you have everything ready. So, just run the following and open it up!
@@ -148,7 +150,7 @@ class Crate extends SpriteComponent {
 
 The abstract Component class is an interface with two methods, render and update, just like our game. The idea is that the Game can be composed of Component's that have their render and update methods called within the Game's methods. SpriteComponent is an implementation that renders a sprite, given its name and size (square or width), the (x, y) position and the rotation angle. It will appropriately shrink or expand the image to fit the size desired.
 
-In this case, we load the 'crate.png' file, that must be in the assets/images folder, and have a Crate class that draw boxes of 128x128 pixels, with rotation angle 0.
+In this case, we load the 'crate.png' file, that must be in the assets/images folder, and have a Crate class that draws boxes of 128x128 pixels, with rotation angle 0.
 
 We then add a Crate property to the Game, instantiate it on the top of the screen, centered horizontally, and render it in our game loop:
 
@@ -164,3 +166,123 @@ We then add a Crate property to the Game, instantiate it on the top of the scree
 This will render our Crate! Awesome! The code is pretty succinct and easy to read as well.
 
 > Checkpoint [7603ca4](https://github.com/luanpotter/flame-example/commit/7603ca48859056f5811f0a0e11100c395b507355)
+
+Our crate is all but stopped in the air. We want to move it! Every crate is going to fall with constant speed, downwards. We need to do that in our update method; just change the Y position of the single Crate we have:
+
+```dart
+    @override
+    void update(double t) {
+        crate.y += t * SPEED;
+    }
+```
+
+This method takes the time (in seconds) it took from the last update. Normally this is going to be very small (order of 10 ms). So the SPEED is a constant in those units; in our case, SPEED = 100 pixels/second.
+
+> Checkpoint: [452dc40](https://github.com/luanpotter/flame-example/commit/452dc4054e2162b9ff09468517ba1c9ae8ae13e4)
+
+Hurray! The crates fall down and disappear, but you cannot interact with them. Let's add a method to destroy the crates we touch. For that, we are going to use a `window` event. The `window` object is available in every Flutter project globally, and it has a few useful properties. We are going to register on the main method a `onPointerDataPacket` event, that is, when the user taps the screen:
+
+```dart
+    window.onPointerDataPacket = (packet) {
+        var pointer = packet.data.first;
+        game.input(pointer.physicalX, pointer.physicalY);
+    }
+```
+
+We just extract the (x,y) coordinate of the click and pass it straight to our Game; that way the Game can handle the click without worrying about events detail.
+
+In order to make things more interesting, let's also refactor the Game class to have a List of Crates, instead of a single one. Afterall, that's what we want. We replace render and update methods with a forEach over the Crates, and the new input method becomes:
+
+```dart
+    void input(double x, double y) {
+        crates.removeWhere((crate) {
+            double dx = (crate.x - x).abs();
+            double dy = (crate.y - y).abs();
+            var diff = CRATE_SIZE / 2;
+            return (dx < diff && dy < diff);
+        });
+    }
+```
+
+> Checkpoint: [364a6c2](https://github.com/luanpotter/flame-example/commit/364a6c20cc096050503c9dbca9797c68a9b13738)
+
+There is one crucial point to mention here, and it's regarding the render method. When we render a Crate, the state of the Canvas is translated and rotate arbitrarily, in order to enable drawing. Since we are going to draw several crates, we need to reset the Canvas between each drawn. That is made with the methods `save`, that saves the current state, and `restore`, that restores the previous saved state, deleting it.
+
+```dart
+    @override
+    void render(Canvas canvas) {
+        canvas.save();
+        crates.forEach((crate) {
+            crate.render(canvas);
+            canvas.restore();
+            canvas.save();
+        });
+    }
+```
+
+This is an important remark, as it is the source of many weird bugs. Maybe we should do that automatically in each render? I don't know, what do you think?
+
+Now we want more Crates! How to do that? Well, the update method can be our timer. So we want a new Crate to be added to the list (spawned) every second. So we created another variable in the Game class, to accumulate the delta times (`t`) from each update call. When it gets over 1, it's reset and a new crate spawned:
+
+```dart
+    @override
+    void update(double t) {
+         this.creationTimer += t;
+         if (this.creationTimer >= 1) {
+             this.creationTimer = 0.0;
+             this.newCrate();
+         }
+         crates.forEach((crate) => crate.y += t * SPEED);
+    }
+```
+
+Don't forget to keep the previous update, so the crates don't stop falling. Also, we change the speed to 250 pixels/second, to make things a little more interesting.
+
+> Checkpoint: [3932372](https://github.com/luanpotter/flame-example/commit/3932372f737c1dc442f812e25be9598750d19d01)
+
+Now we know the basics of Sprite Handling and Rendering. Let's move on one next step: Explosions! What game is good without 'em? The explosion is a beast of a different kind, because it features an animation. Animations in Flame are done simply by rendering different things on render according to the current tick. The same way we added a hand-made timer to spawn boxes, we are going to add a lifeTime property for every Explosion. Also, Explosion won't inherit from SpriteComponent, as for the latter can only have one Sprite. We are going to extend the superclass, PositionComponent, and implement rendering with `Flame.image.load`.
+
+Since every explosion has lots of frames, and they need to be drawn responsively, we are going to pre-load every frame once, and save in a static variable within Explosion class; like so:
+
+```dart
+    static List<Image> images = [];
+    static fetch() async {
+        for (var i = 0; i <= 6; i++) {
+            images.add(await Flame.images.load('explosion-' + i.toString() + '.png'));
+        }
+    }
+```
+
+Note that we load every one of our 7 animation frames, in order. Then, in the render method, we make a simple logic to decide which frame to draw:
+
+```dart
+    @override
+    void render(Canvas canvas) {
+      canvas.translate(x - CRATE_SIZE / 2, y - CRATE_SIZE / 2);
+      int i = (6 * this.lifeTime / TIME).round();
+      if (images.length > i && images[i] != null) {
+        Image image = images[i];
+        Rect src = new Rect.fromLTWH(0.0, 0.0, image.width.toDouble(), image.height.toDouble());
+        Rect dst = new Rect.fromLTWH(0.0, 0.0, CRATE_SIZE, CRATE_SIZE);
+        canvas.drawImageRect(image, src, dst, paint);
+      }
+    }
+```
+
+Note that we are drawing 'by hand', using drawImageRect, as explained earlier. This code is similar to what SpriteComponent does under the hood. Also note that, if the image is not in the array, nothing is drawn - so after TIME seconds (we set it to 0.75, or 750 ms), nothing is rendered.
+
+That's well and good, but we don't want to keep polluting our explosions array with exploded explosions, so we also add a destroy() method that returns, based on the lifeTime, whether we should destroy the explosion object.
+
+Finally, we update our Game, adding a List of Explosion, rendering them on the render method, and updating then on the update method. They need to be updated to increment their lifeTime. We also take this time to refactor what was previously on the Game.update method, i.e., makes the boxes fall, to be inside the Crate.update method, as that's a responsibility of the Crate. Now the game update only delegates to others. Finally, in the update, we need to remove from the list what has been destroyed. For that, List provides a very usefull method: removeWhere:
+
+```dart
+    explosions.removeWhere((exp) => exp.destroy());
+```
+
+We already used that on the input method, to remove the boxes that were touched from the array. There is also where we will create an explosion.
+
+Take a look at the checkpoint for more details.
+
+> Checkpoint: [d8c30ad](https://github.com/luanpotter/flame-example/commit/d8c30adca502ae5f7548dfcb40e715db348fa944)
+
+TO BE CONTINUED
