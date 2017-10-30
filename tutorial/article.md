@@ -114,7 +114,7 @@ So, great, now we have a square!
 
 > Checkpoint: [4eff3bf](https://github.com/luanpotter/flame-example/commit/4eff3bf1eebb60ca4fd070b183b94950229ac8ae)
 
-We also know how the rules work, but we don't know the screen dimensions! How are we going to draw something in the other three corners without this information? Fear not, as Flame has a method to fetch the actual dimension of the screen (that's because there is a documented [issue around that](https://github.com/flutter/flutter/issues/5259).
+We also know how the rulers work, but we don't know the screen dimensions! How are we going to draw something in the other three corners without this information? Fear not, as Flame has a method to fetch the actual dimension of the screen (that's because there is a documented [issue around that](https://github.com/flutter/flutter/issues/5259).
 
 Basically, the async method
 
