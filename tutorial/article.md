@@ -258,7 +258,9 @@ Don't forget to keep the previous update, so the crates don't stop falling. Also
 
 ## Rendering Animations
 
-<img src="https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print2.png" alt="Screen Rules" width="250">
+<img src="https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print2.png" alt="Explosion!" width="250">
+
+*This should be a GIF, right? We are working on a setup for better prints and GIFs for this tutorial!*
 
 Now we know the basics of Sprite Handling and Rendering. Let's move to the next step: Explosions! What game is good without 'em? The explosion is a beast of a different kind, because it features an animation. Animations in Flame are done simply by rendering different things on render according to the current tick. The same way we added a hand-made timer to spawn boxes, we are going to add a lifeTime property for every Explosion. Also, Explosion won't inherit from SpriteComponent, as for the latter can only have one Sprite. We are going to extend the superclass, PositionComponent, and implement rendering with `Flame.image.load`.
 
