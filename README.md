@@ -1,6 +1,6 @@
 # flame_example
 
-This is an example game made using the Flame Engine, following the step by step tutorial.
+This is an example game made using the :fire: [Flame Engine](https://github.com/luanpotter/flame), following the step by step tutorial.
 
 It's a very simple game, where boxes will fall and the goal is to destroy them before they hit the bottom of the screen.
 
