@@ -8,7 +8,7 @@ In this tutorial, we are going to create a very simple game, where boxes will fa
 
 <img src="https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print1.png" alt="Game Running" width="250">
 
-You can check the game yourself to see what we are up to installing [this APK](https://github.com/luanpotter/flame-example/raw/master/tutorial/flame_example.apk).
+You can check the game yourself to see what we are up to installing [this APK](https://github.com/luanpotter/flame-example/raw/master/tutorial/flame_example.apk), or installing it [from the Play Store](https://play.google.com/store/apps/details?id=xyz.luan.flame.example).
 
 This will allow us to cover all the features provided by the framework, and demonstrate how to perform the most basic operations: rendering, sprites, audio, text, animations, and more.
 
