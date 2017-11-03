@@ -97,7 +97,7 @@ And how is drawing done? Let's draw a simple rectangle to see it in action. Add 
 
 Here, as you can see, we define a rectangle, based on screen positions. The following image shows how to rules are oriented. Basically, the origin is in the top left corner, and the axis increase to the right and downwards.
 
-![Screen Rules](https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print0.png)
+![Screen Rules](https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print0.png | width=250)
 
 Also, note that most `draw` methods take a Paint. A Paint is not just a single color, but could be a Degradè or some other textures. Normally, you would either want a solid color or go straight to a Sprite. So we just set the color inside the paint to an instance of Color.
 
