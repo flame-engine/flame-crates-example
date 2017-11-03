@@ -6,7 +6,7 @@ Flame is a minimalist Flutter game engine that provides a few modules to make a 
 
 In this tutorial, we are going to create a very simple game, where boxes will fall and the goal is to destroy them before they hit the bottom of the screen.
 
-<div style="text-align:center"><img src="https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print1.png" alt="Game Running" width="250"></div>
+<img align="center" src="https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print1.png" alt="Game Running" width="250">
 
 You can check the game yourself to see what we are up to installing [this APK](https://github.com/luanpotter/flame-example/raw/master/tutorial/flame_example.apk).
 
@@ -105,7 +105,7 @@ And how is drawing done? Let's draw a simple rectangle to see it in action. Add 
 
 Here, as you can see, we define a rectangle, based on screen positions. The following image shows how to rules are oriented. Basically, the origin is in the top left corner, and the axis increase to the right and downwards.
 
-<div style="text-align:center"><img src="https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print0.png" alt="Screen Rules" width="250"></div>
+<img align="center" src="https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print0.png" alt="Screen Rules" width="250">
 
 Also, note that most `draw` methods take a Paint. A Paint is not just a single color, but could be a Degradè or some other textures. Normally, you would either want a solid color or go straight to a Sprite. So we just set the color inside the paint to an instance of Color.
 
