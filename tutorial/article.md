@@ -27,10 +27,10 @@ So, for now, I'll assume you have everything ready. So, just run the following a
 The first thing you need to do is to add the `flame` dependency. Go to your `pubspec.yaml` file and make sure the dependencies key lists flame:
 
 ```yaml
-  dependencies:
-    flutter:
-      sdk: flutter
-    flame: ^0.5.0
+    dependencies:
+        flutter:
+            sdk: flutter
+        flame: ^0.5.0
 ```
 
 Here we are using the latest version, `0.5.0`, but you can also choose a new one if available.
@@ -57,28 +57,28 @@ The first line is more complex. Basically, some crucial functionality from Flutt
 Finally, we need to start our game. In order to do that, we are going to add one more class to the import list, the Game class. This class provides the abstraction necessary to create any game: a game loop. It must be subclassed so that you are required to implement the basis of any game: an update method, which is called whenever convenient and takes the amount of time passed since last update, and a render method, which has to know how to draw the current state of the game. The inner-workings of the loop are left for the Game class to solve (you can take a look, of course, it's very simple), and you just need to call start to, well, start.
 
 ```dart
-import 'dart:ui';
+    import 'dart:ui';
+    
+    import 'package:flame/game.dart';
+    import 'package:flame/flame.dart';
+    
+    void main() {
+        Flame.util.enableEvents();
+        Flame.audio.disableLog();
+        new MyGame().start();
+    }
 
-import 'package:flame/game.dart';
-import 'package:flame/flame.dart';
-
-void main() {
-  Flame.util.enableEvents();
-  Flame.audio.disableLog();
-  new MyGame().start();
-}
-
-class MyGame extends Game {
-  @override
-  void render(Canvas canvas) {
-    // TODO: implement render
-  }
-
-  @override
-  void update(double t) {
-    // TODO: implement update
-  }
-}
+    class MyGame extends Game {
+        @override
+        void render(Canvas canvas) {
+            // TODO: implement render
+        }
+      
+        @override
+        void update(double t) {
+            // TODO: implement update
+        }
+    }
 ```
 
 > Checkpoint: [599f809](https://github.com/luanpotter/flame-example/commit/599f8090478e0597d1ee939b9b13c895f7314875)
@@ -141,11 +141,11 @@ Finally, we are ready to draw our sprite. The basic way Flame allows you to do t
 However, in the simple case of drawing a crate, it's very simpler to do, because we can use the `SpriteComponent` class, like so:
 
 ```dart
-class Crate extends SpriteComponent {
-  Crate() : super.square(128.0, 'crate.png') {
-    this.angle = 0.0;
-  }
-}
+    class Crate extends SpriteComponent {
+        Crate() : super.square(128.0, 'crate.png') {
+            this.angle = 0.0;
+        }
+    }
 ```
 
 The abstract Component class is an interface with two methods, render and update, just like our game. The idea is that the Game can be composed of Component's that have their render and update methods called within the Game's methods. SpriteComponent is an implementation that renders a sprite, given its name and size (square or width), the (x, y) position and the rotation angle. It will appropriately shrink or expand the image to fit the size desired.
@@ -227,12 +227,12 @@ Now we want more Crates! How to do that? Well, the update method can be our time
 ```dart
     @override
     void update(double t) {
-         this.creationTimer += t;
-         if (this.creationTimer >= 1) {
-             this.creationTimer = 0.0;
-             this.newCrate();
-         }
-         crates.forEach((crate) => crate.y += t * SPEED);
+        this.creationTimer += t;
+        if (this.creationTimer >= 1) {
+            this.creationTimer = 0.0;
+            this.newCrate();
+        }
+        crates.forEach((crate) => crate.y += t * SPEED);
     }
 ```
 
@@ -258,14 +258,14 @@ Note that we load every one of our 7 animation frames, in order. Then, in the re
 ```dart
     @override
     void render(Canvas canvas) {
-      canvas.translate(x - CRATE_SIZE / 2, y - CRATE_SIZE / 2);
-      int i = (6 * this.lifeTime / TIME).round();
-      if (images.length > i && images[i] != null) {
-        Image image = images[i];
-        Rect src = new Rect.fromLTWH(0.0, 0.0, image.width.toDouble(), image.height.toDouble());
-        Rect dst = new Rect.fromLTWH(0.0, 0.0, CRATE_SIZE, CRATE_SIZE);
-        canvas.drawImageRect(image, src, dst, paint);
-      }
+        canvas.translate(x - CRATE_SIZE / 2, y - CRATE_SIZE / 2);
+        int i = (6 * this.lifeTime / TIME).round();
+        if (images.length > i && images[i] != null) {
+            Image image = images[i];
+            Rect src = new Rect.fromLTWH(0.0, 0.0, image.width.toDouble(), image.height.toDouble());
+            Rect dst = new Rect.fromLTWH(0.0, 0.0, CRATE_SIZE, CRATE_SIZE);
+            canvas.drawImageRect(image, src, dst, paint);
+        }
     }
 ```
 
