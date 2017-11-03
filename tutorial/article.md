@@ -1,8 +1,14 @@
+## Introduction
+
 Hello, everyone! I'm Luan and welcome to this first comprehensive Flame tutorial.
 
 Flame is a minimalist Flutter game engine that provides a few modules to make a Canvas-based game.
 
 In this tutorial, we are going to create a very simple game, where boxes will fall and the goal is to destroy them before they hit the bottom of the screen.
+
+<center><img src="https://github.com/luanpotter/flame-example/raw/master/tutorial/screenshots/print1.png" alt="Game Running" width="250"></center>
+
+You can check the game yourself to see what we are up to installing [this APK](https://github.com/luanpotter/flame-example/raw/master/tutorial/flame_example.apk).
 
 This will allow us to cover all the features provided by the framework, and demonstrate how to perform the most basic operations: rendering, sprites, audio, text, animations, and more.
 
@@ -17,6 +23,8 @@ Also worth mentioning, everything described here is committed, as a fully-functi
 One last thing; you can check the full documentation [here](https://github.com/luanpotter/flame/blob/master/README.md). If you have any questions, suggestions, bugs, feel free to open an issue or contact me.
 
 Apart from that, you will also need Flutter and Dart installed. If it suits you, you can also have IntelliJ IDEA, which is a very good place to write your code. In order to install this stuff, you can check out a plethora of tutorials out there, like [this one](https://flutter.io/setup/).
+
+## Basics
 
 So, for now, I'll assume you have everything ready. So, just run the following and open it up!
 
@@ -83,9 +91,9 @@ Finally, we need to start our game. In order to do that, we are going to add one
 
 > Checkpoint: [599f809](https://github.com/luanpotter/flame-example/commit/599f8090478e0597d1ee939b9b13c895f7314875)
 
-PRINT HERE
-
 Right now, the render doesn't do anything, so, if you boot it up, it should run, but give you a black screen. Sweet! So we got a functional app without any widgets and whatnot, and a blank canvas to start drawing our app.
+
+## Rendering Shapes
 
 And how is drawing done? Let's draw a simple rectangle to see it in action. Add the following to your render method:
 
@@ -128,6 +136,8 @@ The next checkpoint will fetch the dimensions once in the main method and store 
 
 > Checkpoint: [a1f9df3](https://github.com/luanpotter/flame-example/commit/a1f9df377d6a608df7f89bfdf557f6a25f057556)
 
+## Rendering Sprites
+
 Finally, we know how to draw any shape, anywhere on the screen. But we want sprites! The next checkpoint adds some of the assets we are going to use in the appropriate assets folder:
 
 > Checkpoint: [92ebfd9](https://github.com/luanpotter/flame-example/commit/92ebfd96333a0df9f68f11f0b469c56ab0132771)
@@ -167,6 +177,8 @@ This will render our Crate! Awesome! The code is pretty succinct and easy to rea
 
 > Checkpoint [7603ca4](https://github.com/luanpotter/flame-example/commit/7603ca48859056f5811f0a0e11100c395b507355)
 
+## Updating State in the Game Loop
+
 Our crate is all but stopped in the air. We want to move it! Every crate is going to fall with constant speed, downwards. We need to do that in our update method; just change the Y position of the single Crate we have:
 
 ```dart
@@ -180,7 +192,9 @@ This method takes the time (in seconds) it took from the last update. Normally t
 
 > Checkpoint: [452dc40](https://github.com/luanpotter/flame-example/commit/452dc4054e2162b9ff09468517ba1c9ae8ae13e4)
 
-Hurray! The crates fall down and disappear, but you cannot interact with them. Let's add a method to destroy the crates we touch. For that, we are going to use a `window` event. The `window` object is available in every Flutter project globally, and it has a few useful properties. We are going to register on the main method a `onPointerDataPacket` event, that is, when the user taps the screen:
+## Handling Input
+
+Hurray! The crates fall down and disappear, but you cannot interact with them. Let's add a method to destroy the crates we touch. For that, we are going to use a `window` event. The `window` object is available in every Flutter project globally, and it has a few useful properties. We are going to register on the main method an `onPointerDataPacket` event, that is, when the user taps the screen:
 
 ```dart
     window.onPointerDataPacket = (packet) {
@@ -206,7 +220,9 @@ In order to make things more interesting, let's also refactor the Game class to 
 
 > Checkpoint: [364a6c2](https://github.com/luanpotter/flame-example/commit/364a6c20cc096050503c9dbca9797c68a9b13738)
 
-There is one crucial point to mention here, and it's regarding the render method. When we render a Crate, the state of the Canvas is translated and rotate arbitrarily, in order to enable drawing. Since we are going to draw several crates, we need to reset the Canvas between each drawn. That is made with the methods `save`, that saves the current state, and `restore`, that restores the previous saved state, deleting it.
+## Rendering Multiple Sprites
+
+There is one **crucial point** to mention here, and it's regarding the **render method**. When we render a Crate, the state of the Canvas is translated and rotate arbitrarily, in order to enable drawing. Since we are going to draw several crates, we need to **reset the Canvas between each drawn**. That is made with the methods `save`, that saves the current state, and `restore`, that restores the previously saved state, deleting it.
 
 ```dart
     @override
@@ -240,7 +256,9 @@ Don't forget to keep the previous update, so the crates don't stop falling. Also
 
 > Checkpoint: [3932372](https://github.com/luanpotter/flame-example/commit/3932372f737c1dc442f812e25be9598750d19d01)
 
-Now we know the basics of Sprite Handling and Rendering. Let's move on one next step: Explosions! What game is good without 'em? The explosion is a beast of a different kind, because it features an animation. Animations in Flame are done simply by rendering different things on render according to the current tick. The same way we added a hand-made timer to spawn boxes, we are going to add a lifeTime property for every Explosion. Also, Explosion won't inherit from SpriteComponent, as for the latter can only have one Sprite. We are going to extend the superclass, PositionComponent, and implement rendering with `Flame.image.load`.
+## Rendering Animations
+
+Now we know the basics of Sprite Handling and Rendering. Let's move to the next step: Explosions! What game is good without 'em? The explosion is a beast of a different kind, because it features an animation. Animations in Flame are done simply by rendering different things on render according to the current tick. The same way we added a hand-made timer to spawn boxes, we are going to add a lifeTime property for every Explosion. Also, Explosion won't inherit from SpriteComponent, as for the latter can only have one Sprite. We are going to extend the superclass, PositionComponent, and implement rendering with `Flame.image.load`.
 
 Since every explosion has lots of frames, and they need to be drawn responsively, we are going to pre-load every frame once, and save in a static variable within Explosion class; like so:
 
@@ -273,7 +291,7 @@ Note that we are drawing 'by hand', using drawImageRect, as explained earlier. T
 
 That's well and good, but we don't want to keep polluting our explosions array with exploded explosions, so we also add a destroy() method that returns, based on the lifeTime, whether we should destroy the explosion object.
 
-Finally, we update our Game, adding a List of Explosion, rendering them on the render method, and updating then on the update method. They need to be updated to increment their lifeTime. We also take this time to refactor what was previously on the Game.update method, i.e., makes the boxes fall, to be inside the Crate.update method, as that's a responsibility of the Crate. Now the game update only delegates to others. Finally, in the update, we need to remove from the list what has been destroyed. For that, List provides a very usefull method: removeWhere:
+Finally, we update our Game, adding a List of Explosion, rendering them on the render method, and updating then on the update method. They need to be updated to increment their lifeTime. We also take this time to refactor what was previously in the Game.update method, i.e., makes the boxes fall, to be inside the Crate.update method, as that's a responsibility of the Crate. Now the game update only delegates to others. Finally, in the update, we need to remove from the list what has been destroyed. For that, List provides a very useful method: removeWhere:
 
 ```dart
     explosions.removeWhere((exp) => exp.destroy());
@@ -285,7 +303,9 @@ Take a look at the checkpoint for more details.
 
 > Checkpoint: [d8c30ad](https://github.com/luanpotter/flame-example/commit/d8c30adca502ae5f7548dfcb40e715db348fa944)
 
-In the next commit, we are finally going to play some audio! To do so, you need to add the file to the assets folder, inside `assets/audio/`. It must be a MP3 or a OGG file. Then, anywhere in your code, run:
+## Playing Audio
+
+In the next commit, we are finally going to play some audio! To do so, you need to add the file to the assets folder, inside `assets/audio/`. It must be an MP3 or an OGG file. Then, anywhere in your code, run:
 
 ```dart
     Flame.audio.play('filename.mp3');
@@ -293,29 +313,31 @@ In the next commit, we are finally going to play some audio! To do so, you need 
 
 Where `filename.mp3` is the name of the file inside. In our case, we will play the `explosion.mp3` sound when we click in a box.
 
-Furthermore, let's start awarding punctiuation. We add a points variable to hold the current number of points. It starts with zero; we get 10 points per box clicked, and lose 20 when the box hit the ground.
+Furthermore, let's start awarding punctuation. We add a `points` variable to hold the current number of points. It starts with zero; we get 10 points per box clicked, and lose 20 when the box hit the ground.
 
-We now have an obligation to deal with runaway boxes. Based in what we did to the Explosion class, we add a destroy method for the Crate, that is going to return wether they are out of screen. This is starting to become a pattern! If destroyed, we remove from the array and adjust the points.
+We now have an obligation to deal with runaway boxes. Based on what we did to the Explosion class, we add a destroy method for the Crate, that is going to return whether they are out of the screen. This is starting to become a pattern! If destroyed, we remove from the array and adjust the points.
 
-For now the scoring is working, but it's not being shown anywhere; that will come soon.
+For now, the scoring is working, but it's not being shown anywhere; that will come soon.
 
-The audio will not work in this next checkpoint because I forgot to add the files and put then in the pubspec; that's done in the following commit.
+The audio will not work in this next checkpoint because I forgot to add the files and put them in the `pubspec.yaml`; that's done in the following commit.
 
 > Checkpoint: [43a7570](https://github.com/luanpotter/flame-example/commit/43a7570304d954a8cb38b76f863d73bc7d75d081)
 
-Now we want more sounds! The `audioplayers` (mind the s) lib the Flame uses allow you to play multiple sounds at once, as you might already have noticed if you went click frenzy, but now let's use that for our advantage, by playing a miss sound, when the box hits the ground (destroy method of the Crate), and a background music.
+Now we want more sounds! The `audioplayers` (mind the s) lib the Flame uses allow you to play multiple sounds at once, as you might already have noticed if you went click frenzy, but now let's use that to our advantage, by playing a miss sound, when the box hits the ground (destroy method of the Crate), and a background music.
 
-In order to play the background music on loop, use the loop method, that works just like play:
+In order to play the background music on a loop, use the loop method, that works just like before:
 
 ```dart
     Flame.audio.loop('music.ogg');
 ```
 
-In this commit we also fix the destroy condition for the Crates, that we missed in the previous commit (because there was no way to know, now there is sound).
+In this commit, we also fix the destroy condition for the Crates, that we missed in the previous commit (because there was no way to know, now there is sound).
 
 > Checkpoint: [f575150](https://github.com/luanpotter/flame-example/commit/f575150a2fbcad7ea6b19bff08c6d289ed8d5404)
 
-Now that we have all the audio we want (background, music, sound effects, MP3, OGG, loop, simultaneosly), let's get into text rendering. We need to see that score, afterall. The way this is done 'by hand' is to create a Paragraph object and use the drawParagraph of the Canvas. It takes a lot of configuration and it's a rather confusing API, but can be accomplished like so:
+## Rendering Text
+
+Now that we have all the audio we want (background, music, sound effects, MP3, OGG, loop, simultaneously), let's get into text rendering. We need to see that score, after all. The way this is done 'by hand' is to create a Paragraph object and use the drawParagraph of the Canvas. It takes a lot of configuration and it's a rather confusing API, but can be accomplished like so:
 
 ```dart
     String text = points.toString(); // text to render
@@ -328,9 +350,9 @@ Now that we have all the audio we want (background, music, sound effects, MP3, O
 
 > Checkpoint: [e09221e](https://github.com/luanpotter/flame-example/commit/e09221e86c8f959bab1870173fa856f7f00f1951)
 
-This is draw in the default font, and you can use the fontFamily property to specify a different common system font, but probably in your game you will want to add a custom one.
+This is drawn in the default font, and you can use the fontFamily property to specify a different common system font; though, probably, in your game, you will want to add a custom one.
 
-So I headed to 1001fonts.com and got [this pretty commercial free Halo font](www.1001fonts.com/halo3-font.html) as a TTF. Again, just drop the file in `assets/fonts`, but now it must be imported differently in the pubspec. Instead of adding one more asset, there is a dedicated font tag, witch is commented by default with complete instructions on how to add the fonts. So, assign it a name and do something like:
+So I headed to 1001fonts.com and got [this pretty commercial free Halo font](www.1001fonts.com/halo3-font.html) as a TTF. Again, just drop the file in `assets/fonts`, but now it must be imported differently in the `pubspec.yaml` file. Instead of adding one more asset, there is a dedicated font tag, which is commented by default with complete instructions on how to add the fonts. So, assign it a name and do something like:
 
 ```yaml
     fonts:
@@ -358,3 +380,13 @@ For the color, again we are using the `Colors.white` helper, but we can also use
 > Checkpoint: [952a9df](https://github.com/luanpotter/flame-example/commit/952a9dfd753d7e335359b4f7327e4f2bbc2938be)
 
 And there you have it! A complete game with sprite rendering, text rendering, audio, game loop, events and state management.
+
+## Release
+
+Is your game ready to release?
+
+Just follow [these few simple steps](https://flutter.io/android-release/) from the Flutter tutorial.
+
+They are all pretty straightforward, as you can see in this final checkpoint, except for the Icons part, which might cause a bit of a headache. My recommendation is to make a big (512 or 1024 px) version of your icon, and use the [Make App Icon](https://makeappicon.com) website to generate a zip with everything you need (iOS and Android).
+
+> Checkpoint: [2974f29](https://github.com/luanpotter/flame-example/commit/2974f29804d548c33fa9a736d1d3744414aaba0f)
