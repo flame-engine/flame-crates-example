@@ -390,3 +390,13 @@ Just follow [these few simple steps](https://flutter.io/android-release/) from t
 They are all pretty straightforward, as you can see in this final checkpoint, except for the Icons part, which might cause a bit of a headache. My recommendation is to make a big (512 or 1024 px) version of your icon, and use the [Make App Icon](https://makeappicon.com) website to generate a zip with everything you need (iOS and Android).
 
 > Checkpoint: [2974f29](https://github.com/luanpotter/flame-example/commit/2974f29804d548c33fa9a736d1d3744414aaba0f)
+
+## What Else?
+
+Did you enjoy Flame? If you have any suggestions, bugs, questions, feature requests, or anything, please feel free to contact me!
+
+Want to improve your game and learn more? How about adding a Server with Firebase and Google Sign In? How about adding ads? How about adding a Main Menu and multiple screens?
+
+There's a lot to improve, of course -- this is just an example game. But it should have given a basic idea of the core concepts of game development with Flutter (with or without Flame).
+
+Hope everyone enjoyed it!
