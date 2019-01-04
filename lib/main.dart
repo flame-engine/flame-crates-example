@@ -71,7 +71,7 @@ class Explosion extends AnimationComponent {
   }
 
   bool destroy() {
-    return this.animation.lifeTime >= TIME;
+    return this.animation.isLastFrame;
   }
 }
 
