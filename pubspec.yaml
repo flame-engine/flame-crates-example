@@ -3,11 +3,11 @@ description: A new Flutter project.
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
-  
+
 dependencies:
   flutter:
     sdk: flutter
-  flame: ^0.9.5
+  flame: ^0.10.0
   cupertino_icons: ^0.1.0
 
 dev_dependencies:

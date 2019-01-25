@@ -2,17 +2,25 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' show Colors, TextPainter, runApp;
+import 'package:flutter/material.dart' show Colors, runApp;
 
 import 'package:flame/game.dart';
 import 'package:flame/components/component.dart';
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/flame.dart';
+import 'package:flame/text_config.dart';
+import 'package:flame/position.dart';
 
 const SPEED = 250.0;
 const CRATE_SIZE = 64.0;
 
 var points = 0;
+
+TextConfig textConfig = TextConfig(
+    color: Colors.white,
+    fontSize: 48.0,
+    fontFamily: 'Halo',
+);
 
 main() async {
   Flame.audio.disableLog();
@@ -85,10 +93,7 @@ class MyGame extends BaseGame {
     super.render(canvas);
 
     String text = points.toString();
-    TextPainter p = Flame.util
-        .text(text, color: Colors.white, fontSize: 48.0, fontFamily: 'Halo');
-    p.paint(canvas,
-        new Offset(size.width - p.width - 10, size.height - p.height - 10));
+    textConfig.render(canvas, text, Position(15, 15));
   }
 
   @override
