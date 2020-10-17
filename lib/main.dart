@@ -1,48 +1,48 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' show Colors, runApp;
-
-import 'package:flame/game.dart';
-import 'package:flame/components/component.dart';
 import 'package:flame/components/animation_component.dart';
+import 'package:flame/components/component.dart';
+import 'package:flame/components/mixins/has_game_ref.dart';
 import 'package:flame/flame.dart';
-import 'package:flame/text_config.dart';
+import 'package:flame/game.dart';
+import 'package:flame/gestures.dart';
+import 'package:flame/palette.dart';
 import 'package:flame/position.dart';
+import 'package:flame/text_config.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart' show runApp;
 
 const SPEED = 250.0;
 const CRATE_SIZE = 64.0;
 
-var points = 0;
-
-TextConfig textConfig = TextConfig(
-    color: Colors.white,
-    fontSize: 48.0,
-    fontFamily: 'Halo',
+final rnd = Random();
+final textConfig = TextConfig(
+  color: BasicPalette.white.color,
+  fontSize: 48.0,
+  fontFamily: 'Halo',
 );
 
-main() async {
-  Flame.audio.disableLog();
-  Flame.images.loadAll(['explosion.png', 'crate.png']);
+void main() async {
+  await Flame.init();
+  await Flame.images.loadAll(['explosion.png', 'crate.png']);
 
-  var game = new MyGame();
-  runApp(game.widget);
+  final game = MyGame();
 
   Flame.audio.loop('music.ogg');
-  Flame.util.addGestureRecognizer(new TapGestureRecognizer()
-    ..onTapDown = (TapDownDetails evt) => game.input(evt.globalPosition));
+  runApp(game.widget);
 }
 
-class Crate extends SpriteComponent {
+class Crate extends SpriteComponent with HasGameRef<MyGame> {
   bool explode = false;
   double maxY;
 
   Crate() : super.square(CRATE_SIZE, 'crate.png');
 
   @override
-  void update(double t) {
-    y += t * SPEED;
+  void update(double dt) {
+    super.update(dt);
+    y += dt * SPEED;
   }
 
   @override
@@ -53,9 +53,9 @@ class Crate extends SpriteComponent {
     if (y == null || maxY == null) {
       return false;
     }
-    bool destroy = y >= maxY + CRATE_SIZE / 2;
+    final destroy = y >= maxY + CRATE_SIZE / 2;
     if (destroy) {
-      points -= 20;
+      gameRef.points -= 20;
       Flame.audio.play('miss.mp3');
     }
     return destroy;
@@ -63,59 +63,65 @@ class Crate extends SpriteComponent {
 
   @override
   void resize(Size size) {
-    this.x = rnd.nextDouble() * (size.width - CRATE_SIZE);
-    this.y = 0.0;
-    this.maxY = size.height;
+    x = rnd.nextDouble() * (size.width - CRATE_SIZE);
+    y = 0.0;
+    maxY = size.height;
   }
 }
 
 class Explosion extends AnimationComponent {
   static const TIME = 0.75;
 
-  Explosion(Crate crate) : super.sequenced(CRATE_SIZE, CRATE_SIZE, 'explosion.png', 7, textureWidth: 31.0, textureHeight: 31.0) {
-    this.x = crate.x;
-    this.y = crate.y;
-    this.animation.stepTime = TIME / 7;
-  }
-
-  bool destroy() {
-    return this.animation.isLastFrame;
+  Explosion(Crate crate)
+      : super.sequenced(
+          CRATE_SIZE,
+          CRATE_SIZE,
+          'explosion.png',
+          7,
+          textureWidth: 31.0,
+          textureHeight: 31.0,
+          destroyOnFinish: true,
+        ) {
+    x = crate.x;
+    y = crate.y;
+    animation.stepTime = TIME / 7;
   }
 }
 
-Random rnd = new Random();
-
-class MyGame extends BaseGame {
+class MyGame extends BaseGame with TapDetector {
   double creationTimer = 0.0;
+  int points = 0;
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
 
-    String text = points.toString();
+    final text = points.toString();
     textConfig.render(canvas, text, Position(15, 15));
   }
 
   @override
-  void update(double t) {
-    creationTimer += t;
+  void update(double dt) {
+    creationTimer += dt;
     if (creationTimer >= 1) {
-      creationTimer = 0.0;
-      add(new Crate());
+      creationTimer -= 1;
+      add(Crate());
     }
-    super.update(t);
+    super.update(dt);
   }
 
-  void input(Offset position) {
+  @override
+  void onTapDown(TapDownDetails details) {
+    final position = details.globalPosition;
     components.forEach((component) {
       if (!(component is Crate)) {
         return;
       }
-      Crate crate = component as Crate;
-      bool remove = crate.toRect().contains(position);
+      final crate = component as Crate;
+      final remove = crate.toRect().contains(position);
       if (remove) {
         crate.explode = true;
-        add(new Explosion(crate));
+        add(Explosion(crate));
         Flame.audio.play('explosion.mp3');
         points += 10;
       }

@@ -12,3 +12,4 @@ pubspec.lock
 .dart_tool/
 .flutter-plugins-dependencies
 *.iml
+lib/generated_plugin_registrant.dart
