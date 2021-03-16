@@ -2,6 +2,8 @@
 
 [![Powered by Flame](https://img.shields.io/badge/Powered%20by-%F0%9F%94%A5-orange.svg?style=for-the-badge)](https://flame-engine.org)
 
+**Note**: This tutorial/example uses a very outdated version of Flame, so I am archiving this repo.
+
 This is an example game made using the :fire: [Flame Engine](https://github.com/luanpotter/flame), based of an old step by step tutorial.
 
 It's a very simple game, where boxes will fall and the goal is to destroy them before they hit the bottom of the screen.
